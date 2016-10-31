@@ -29,7 +29,7 @@ url="${base}&kind=${kind}"
 
 path="/tmp/jikoku_${kind}"
 
-if [ ! -f ${path} ]; then
+if [ ! -f ${path} ] && [ ! -s ${path} ]; then
     /usr/bin/curl -s ${url} -o ${path}
 else
     current=`/bin/date +%s`
