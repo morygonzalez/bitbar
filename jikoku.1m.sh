@@ -1,16 +1,21 @@
-#!/bin/zsh
+#!/bin/sh
+export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 echo ":train:"
 echo "---"
 
+go_filter=""
+return_filter="筑 西 唐"
+go_base="http://transit.yahoo.co.jp/station/time/28074/?gid=2480"
+return_base="http://transit.yahoo.co.jp/station/time/28236/?gid=6400"
+
 day=`date "+%a"`
 hour=`date "+%H"`
-filter='筑 西 唐'
 
 if [ $hour -lt 13 ]; then
-    base="http://transit.yahoo.co.jp/station/time/28074/?gid=2480"
+    go=true
 else
-    base="http://transit.yahoo.co.jp/station/time/28236/?gid=6400"
+    go=false
 fi
 
 case ${day} in
@@ -25,24 +30,33 @@ case ${day} in
     ;;
 esac
 
-url="${base}&kind=${kind}"
-
-path="/tmp/jikoku_${kind}"
+if [ $go = true ]; then
+    url="${go_base}&kind=${kind}"
+    path="/tmp/jikoku_go_${kind}"
+    filter=$go_filter
+else
+    url="${return_base}&kind=${kind}"
+    path="/tmp/jikoku_return_${kind}"
+    filter=$return_filter
+fi
 
 if [ ! -f ${path} ] && [ ! -s ${path} ]; then
-    /usr/bin/curl -s ${url} -o ${path}
+    curl -s ${url} -o ${path}
 else
-    current=`/bin/date +%s`
-    last_modified=`/usr/bin/stat -f "%m" ${path}`
+    current=`date +%s`
+    last_modified=`stat -f "%m" ${path}`
     if [ $(($current - $last_modified)) -gt 3600 ]; then
-        /usr/bin/curl -s ${url} -o ${path}
+        curl -s ${url} -o ${path}
     fi
 fi
 
-/bin/cat ${path} |\
-    /usr/local/bin/pup 'table.tblDiaDetail [id*="hh_"] json{}' |\
-    /usr/local/bin/jq '[.[] | { hour: .children[0].text, minutes: [.children[1].children[].children[].children[].children[].children | map(.text) | join(" ") ] }]' |\
-    /Users/morygonzalez/src/github.com/morygonzalez/jikoku/jikoku -f "${filter}"
+cat ${path} |\
+    pup 'table.tblDiaDetail [id*="hh_"] json{}' |\
+    jq '[.[] | { hour: .children[0].text, minutes: [.children[1].children[].children[].children[].children[].children | map(.text) | join(" ") ] }]' |\
+    jikoku -f "${filter}"
+
+echo "---"
+echo "Open in Browser | href=$url"
 
 echo "---"
 echo "Refresh | refresh=true"
