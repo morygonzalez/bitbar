@@ -5,7 +5,7 @@ echo ":train:"
 echo "---"
 
 go_filter=""
-return_filter="筑 西 唐"
+return_filter="筑 唐 津"
 go_base="http://transit.yahoo.co.jp/station/time/28074/?gid=2480"
 return_base="http://transit.yahoo.co.jp/station/time/28236/?gid=6400"
 
