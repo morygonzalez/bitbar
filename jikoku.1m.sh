@@ -7,7 +7,7 @@ echo "---"
 go_filter=""
 return_filter="筑 唐 津"
 go_base="https://transit.yahoo.co.jp/station/time/28074/?gid=2480"
-return_base="https://transit.yahoo.co.jp/station/time/28236/?gid=6400"
+return_base="https://transit.yahoo.co.jp/station/time/28253/?gid=6400"
 
 day=`date "+%a"`
 hour=`date "+%H"`
