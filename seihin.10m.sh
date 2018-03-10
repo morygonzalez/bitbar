@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-echo ":house_with_garden:"
+echo "🌡"
 echo "---"
 
 cd /Users/morygonzalez/src/github.com/morygonzalez/seihin-weather

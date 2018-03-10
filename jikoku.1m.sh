@@ -1,7 +1,7 @@
 #!/bin/sh
 export PATH="$HOME/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
-echo ":train:"
+echo "⏲"
 echo "---"
 
 go_filter=""
